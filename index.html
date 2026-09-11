@@ -1,0 +1,1048 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Smart Park - Futuristic Parking</title>
+
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+    <link rel="stylesheet" href="style.css">
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+
+<div class="app">
+
+    <!-- Background -->
+    <div class="background-gradient"></div>
+    <div class="glow glow-one"></div>
+    <div class="glow glow-two"></div>
+    <div class="grid-background"></div>
+
+    <!-- HEADER -->
+    <header class="header">
+
+        <div class="brand">
+
+            <div class="brand-icon">
+                <i class="fa-solid fa-car"></i>
+            </div>
+
+            <div>
+                <div class="brand-name">SMART PARK</div>
+                <div class="brand-subtitle">
+                    FUTURISTIC AUTONOMOUS PARKING
+                </div>
+            </div>
+
+        </div>
+
+        <div id="headerUser" class="header-user hidden">
+
+            <div class="user-role">
+                <i id="headerUserIcon" class="fa-solid fa-user"></i>
+                <span id="headerUserName"></span>
+            </div>
+
+            <button class="btn btn-secondary logout-btn"
+                    onclick="logout()">
+                <i class="fa-solid fa-right-from-bracket"></i>
+                <span>Logout</span>
+            </button>
+
+        </div>
+
+    </header>
+
+
+    <!-- MAIN -->
+    <main class="main-container">
+
+        <!-- LOGIN -->
+        <section id="loginView" class="view">
+
+            <div class="login-container glass-card">
+
+                <div class="login-header">
+
+                    <div class="login-icon">
+                        <i class="fa-solid fa-wand-magic-sparkles"></i>
+                    </div>
+
+                    <h1>Smart Parking Access</h1>
+
+                    <p>
+                        Reserve your automated spot instantly in Indian Rupee.
+                    </p>
+
+                </div>
+
+
+                <!-- LOGIN TABS -->
+                <div class="login-tabs">
+
+                    <button id="customerTab"
+                            class="login-tab active"
+                            onclick="switchLoginTab('customer')">
+
+                        <i class="fa-solid fa-user"></i>
+                        Customer
+
+                    </button>
+
+                    <button id="adminTab"
+                            class="login-tab"
+                            onclick="switchLoginTab('admin')">
+
+                        <i class="fa-solid fa-shield-halved"></i>
+                        Admin
+
+                    </button>
+
+                </div>
+
+
+                <!-- CUSTOMER LOGIN -->
+                <form id="customerLoginForm"
+                      onsubmit="customerLogin(event)">
+
+                    <div class="form-group">
+
+                        <label>Full Name</label>
+
+                        <input
+                            id="customerName"
+                            type="text"
+                            value="Rahul Sharma"
+                            placeholder="e.g. Rahul Sharma"
+                            required
+                        >
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label>Email Address</label>
+
+                        <input
+                            id="customerEmail"
+                            type="email"
+                            value="rahul@example.com"
+                            placeholder="rahul@example.com"
+                            required
+                        >
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label>Phone Number</label>
+
+                        <input
+                            id="customerPhone"
+                            type="tel"
+                            value="+91 98765 43210"
+                            placeholder="+91 98765 43210"
+                            required
+                        >
+
+                    </div>
+
+
+                    <button class="btn btn-primary full-btn"
+                            type="submit">
+
+                        Enter Customer Portal
+
+                    </button>
+
+                </form>
+
+
+                <!-- ADMIN LOGIN -->
+                <form id="adminLoginForm"
+                      class="hidden"
+                      onsubmit="adminLogin(event)">
+
+                    <div class="form-group">
+
+                        <label>Admin ID</label>
+
+                        <input
+                            id="adminId"
+                            type="text"
+                            value="admin"
+                            placeholder="admin"
+                            required
+                        >
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label>Password</label>
+
+                        <input
+                            id="adminPassword"
+                            type="password"
+                            value="password"
+                            placeholder="••••••••"
+                            required
+                        >
+
+                    </div>
+
+
+                    <button class="btn btn-primary full-btn"
+                            type="submit">
+
+                        Access Admin Panel
+
+                    </button>
+
+                </form>
+
+            </div>
+
+        </section>
+
+
+        <!-- CUSTOMER DASHBOARD -->
+        <section id="customerDashboard"
+                 class="view hidden">
+
+            <div class="dashboard-heading">
+
+                <div>
+
+                    <h1>Select a Parking Slot</h1>
+
+                    <p>
+                        Click on any available green spot below to book your parking.
+                    </p>
+
+                </div>
+
+
+                <div class="legend">
+
+                    <span>
+                        <i class="legend-dot available"></i>
+                        Available
+                    </span>
+
+                    <span>
+                        <i class="legend-dot booked"></i>
+                        Booked
+                    </span>
+
+                    <span>
+                        <i class="legend-dot selected"></i>
+                        Selected
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <!-- PARKING LOT -->
+            <div class="glass-card parking-card">
+
+                <div id="parkingGrid"
+                     class="parking-grid">
+                </div>
+
+            </div>
+
+
+            <!-- SELECTED SLOT BAR -->
+            <div id="selectionBar"
+                 class="selection-bar hidden">
+
+                <div class="selected-info">
+
+                    <div class="selection-icon">
+                        <i class="fa-solid fa-location-dot"></i>
+                    </div>
+
+                    <div>
+
+                        <span>SELECTED SLOT</span>
+
+                        <strong id="selectedSlotText">
+                            A-1 - ₹50
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+                <div class="selection-actions">
+
+                    <button class="btn btn-secondary"
+                            onclick="cancelSelection()">
+
+                        Cancel
+
+                    </button>
+
+                    <button class="btn btn-primary"
+                            onclick="proceedToPayment()">
+
+                        Proceed to Secure Payment
+
+                    </button>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- PAYMENT VIEW -->
+        <section id="paymentView"
+                 class="view hidden">
+
+            <div class="payment-container glass-card">
+
+                <div class="payment-title">
+
+                    <div class="payment-icon">
+                        <i class="fa-solid fa-credit-card"></i>
+                    </div>
+
+                    <h2>Secure Checkout</h2>
+
+                </div>
+
+
+                <!-- PAYMENT SUMMARY -->
+                <div class="payment-summary">
+
+                    <div class="summary-row">
+
+                        <span>Parking Spot:</span>
+
+                        <strong id="paymentSpot">
+                            A-1
+                        </strong>
+
+                    </div>
+
+
+                    <div class="summary-row total">
+
+                        <span>Total Amount:</span>
+
+                        <strong id="paymentAmount">
+                            ₹50.00
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+                <!-- PAYMENT METHODS -->
+                <div class="payment-method-section">
+
+                    <label>Choose Payment Method</label>
+
+                    <div class="payment-methods">
+
+                        <button class="payment-method active"
+                                onclick="selectPaymentMethod('upi')"
+                                id="upiMethod">
+
+                            ⚡ UPI
+
+                        </button>
+
+                        <button class="payment-method"
+                                onclick="selectPaymentMethod('card')"
+                                id="cardMethod">
+
+                            💳 Card
+
+                        </button>
+
+                        <button class="payment-method"
+                                onclick="selectPaymentMethod('netbanking')"
+                                id="netbankingMethod">
+
+                            🏛️ NetBank
+
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+                <!-- UPI -->
+                <div id="upiPayment"
+                     class="payment-fields">
+
+                    <div class="form-group">
+
+                        <label>UPI ID / VPA</label>
+
+                        <input
+                            id="upiId"
+                            type="text"
+                            value="rahul@oksbi"
+                            placeholder="username@oksbi"
+                        >
+
+                    </div>
+
+                    <div class="payment-apps">
+
+                        <span>Google Pay</span>
+                        <span>PhonePe</span>
+                        <span>Paytm</span>
+
+                    </div>
+
+                </div>
+
+
+                <!-- CARD -->
+                <div id="cardPayment"
+                     class="payment-fields hidden">
+
+                    <div class="form-group">
+
+                        <label>Card Number</label>
+
+                        <input
+                            id="cardNumber"
+                            type="text"
+                            value="4242 4242 4242 4242"
+                            placeholder="4242 4242 4242 4242"
+                        >
+
+                    </div>
+
+
+                    <div class="card-row">
+
+                        <div class="form-group">
+
+                            <label>Expiry Date</label>
+
+                            <input
+                                type="text"
+                                value="12/28"
+                                placeholder="MM/YY"
+                            >
+
+                        </div>
+
+                        <div class="form-group">
+
+                            <label>CVC</label>
+
+                            <input
+                                type="text"
+                                value="123"
+                                placeholder="123"
+                            >
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label>Name on Card</label>
+
+                        <input
+                            type="text"
+                            id="cardName"
+                            value="Rahul Sharma"
+                            placeholder="e.g. Rahul Sharma"
+                        >
+
+                    </div>
+
+                </div>
+
+
+                <!-- NET BANKING -->
+                <div id="netbankingPayment"
+                     class="payment-fields hidden">
+
+                    <div class="form-group">
+
+                        <label>Select Bank</label>
+
+                        <select id="selectedBank"
+                                onchange="updateBankMessage()">
+
+                            <option>HDFC Bank</option>
+                            <option>State Bank of India</option>
+                            <option>ICICI Bank</option>
+                            <option>Axis Bank</option>
+                            <option>Kotak Mahindra Bank</option>
+
+                        </select>
+
+                    </div>
+
+
+                    <p id="bankMessage"
+                       class="bank-message">
+
+                        You will be securely redirected to HDFC Bank portal
+                        to complete payment.
+
+                    </p>
+
+                </div>
+
+
+                <!-- PAYMENT BUTTONS -->
+                <div class="payment-actions">
+
+                    <button class="btn btn-secondary"
+                            id="paymentBackButton"
+                            onclick="backFromPayment()">
+
+                        Back
+
+                    </button>
+
+                    <button class="btn btn-primary"
+                            id="payButton"
+                            onclick="confirmPayment()">
+
+                        Pay ₹50.00
+
+                    </button>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- TICKET -->
+        <section id="ticketView"
+                 class="view hidden">
+
+            <div class="ticket-container">
+
+                <div class="ticket-success">
+
+                    <div class="success-icon">
+                        <i class="fa-solid fa-check"></i>
+                    </div>
+
+                    <h2>BOOKED</h2>
+
+                    <p>
+                        Digital QR Ticket Generated & Emailed
+                    </p>
+
+                </div>
+
+
+                <div class="ticket-details">
+
+                    <div class="ticket-grid">
+
+                        <div>
+
+                            <span>SPOT NUMBER</span>
+
+                            <strong id="ticketSpot">
+                                A-1
+                            </strong>
+
+                        </div>
+
+
+                        <div class="ticket-right">
+
+                            <span>AMOUNT PAID</span>
+
+                            <strong id="ticketAmount">
+                                ₹50.00
+                            </strong>
+
+                        </div>
+
+
+                        <div class="customer-ticket">
+
+                            <span>CUSTOMER NAME</span>
+
+                            <strong id="ticketCustomer">
+                                Rahul Sharma
+                            </strong>
+
+                        </div>
+
+
+                        <div>
+
+                            <span>BOOKING DATE</span>
+
+                            <strong id="ticketDate">
+                                2026-09-11
+                            </strong>
+
+                        </div>
+
+
+                        <div class="ticket-right">
+
+                            <span>BOOKING ID</span>
+
+                            <strong id="ticketId">
+                                b-123
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="qr-section">
+
+                    <div class="qr-code"
+                         id="qrCode">
+
+                        <div class="qr-pattern"></div>
+
+                    </div>
+
+                    <p>
+                        Scan this QR code at the automated parking gate.
+                    </p>
+
+                    <strong id="ticketEmail">
+                        Pass successfully sent to email
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+            <button class="btn btn-outline ticket-back"
+                    onclick="bookAnotherSpot()">
+
+                Book Another Spot
+
+            </button>
+
+        </section>
+
+
+        <!-- ADMIN DASHBOARD -->
+        <section id="adminDashboard"
+                 class="view hidden">
+
+            <div class="dashboard-heading admin-heading">
+
+                <div>
+
+                    <h1>Admin Control Panel</h1>
+
+                    <p>
+                        Manage parking spots, live bookings, and revenue analytics.
+                    </p>
+
+                </div>
+
+
+                <div class="admin-tabs">
+
+                    <button class="admin-tab active"
+                            onclick="switchAdminTab('overview')"
+                            id="overviewTab">
+
+                        📊 Overview
+
+                    </button>
+
+                    <button class="admin-tab"
+                            onclick="switchAdminTab('lots')"
+                            id="lotsTab">
+
+                        🚗 Manage Lots
+
+                    </button>
+
+                    <button class="admin-tab"
+                            onclick="switchAdminTab('bookings')"
+                            id="bookingsTab">
+
+                        🎫 Bookings
+
+                    </button>
+
+                    <button class="admin-tab"
+                            onclick="switchAdminTab('customers')"
+                            id="customersTab">
+
+                        👥 Customers
+
+                    </button>
+
+                </div>
+
+            </div>
+
+
+            <!-- OVERVIEW -->
+            <div id="adminOverview"
+                 class="admin-content">
+
+                <div class="stats-grid">
+
+                    <div class="stat-card">
+
+                        <div class="stat-icon cyan">
+                            <i class="fa-solid fa-chart-column"></i>
+                        </div>
+
+                        <div>
+
+                            <span>Today's Revenue</span>
+
+                            <strong id="todayRevenue">
+                                ₹0.00
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="stat-card">
+
+                        <div class="stat-icon green">
+                            <i class="fa-solid fa-circle-check"></i>
+                        </div>
+
+                        <div>
+
+                            <span>Available Spots</span>
+
+                            <strong id="availableSpots">
+                                0
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="stat-card">
+
+                        <div class="stat-icon amber">
+                            <i class="fa-solid fa-car"></i>
+                        </div>
+
+                        <div>
+
+                            <span>Booked Spots</span>
+
+                            <strong id="bookedSpots">
+                                0
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="stat-card">
+
+                        <div class="stat-icon indigo">
+                            <i class="fa-solid fa-user-check"></i>
+                        </div>
+
+                        <div>
+
+                            <span>Active Customers</span>
+
+                            <strong id="activeCustomers">
+                                0
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="charts-grid">
+
+                    <div class="glass-card chart-card">
+
+                        <h3>
+                            <i class="fa-solid fa-chart-column"></i>
+                            Daily Revenue (₹)
+                        </h3>
+
+                        <div class="chart-container">
+
+                            <canvas id="revenueChart"></canvas>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="glass-card chart-card">
+
+                        <h3>
+                            <i class="fa-solid fa-chart-pie"></i>
+                            Slot Occupancy Status
+                        </h3>
+
+                        <div class="chart-container">
+
+                            <canvas id="occupancyChart"></canvas>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- MANAGE LOTS -->
+            <div id="adminLots"
+                 class="admin-content hidden">
+
+                <div class="glass-card admin-card">
+
+                    <h3>
+                        <i class="fa-solid fa-plus"></i>
+                        Add New Parking Spot
+                    </h3>
+
+
+                    <form id="addLotForm"
+                          class="add-lot-form"
+                          onsubmit="addParkingLot(event)">
+
+                        <div class="form-group">
+
+                            <label>Spot Number</label>
+
+                            <input
+                                id="newLotNumber"
+                                type="text"
+                                placeholder="e.g. A-16"
+                                required
+                            >
+
+                        </div>
+
+
+                        <div class="form-group">
+
+                            <label>Location Zone</label>
+
+                            <input
+                                id="newLotLocation"
+                                type="text"
+                                value="Zone 1"
+                                placeholder="Zone 1"
+                                required
+                            >
+
+                        </div>
+
+
+                        <div class="form-group">
+
+                            <label>Price (₹)</label>
+
+                            <input
+                                id="newLotPrice"
+                                type="number"
+                                value="50"
+                                min="0"
+                                required
+                            >
+
+                        </div>
+
+
+                        <button class="btn btn-primary"
+                                type="submit">
+
+                            Add Spot
+
+                        </button>
+
+                    </form>
+
+                </div>
+
+
+                <div class="glass-card admin-card">
+
+                    <h3>
+                        <i class="fa-solid fa-car"></i>
+                        All Parking Lots
+                        (<span id="lotCount">0</span>)
+                    </h3>
+
+                    <div id="adminLotsGrid"
+                         class="admin-lots-grid">
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- BOOKINGS -->
+            <div id="adminBookings"
+                 class="admin-content hidden">
+
+                <div class="glass-card admin-card">
+
+                    <div class="table-header">
+
+                        <h3>
+                            <i class="fa-solid fa-ticket"></i>
+                            Active & Past Bookings
+                            (<span id="bookingCount">0</span>)
+                        </h3>
+
+                        <input
+                            id="bookingSearch"
+                            class="search-input"
+                            type="text"
+                            placeholder="Search bookings..."
+                            oninput="renderBookings()"
+                        >
+
+                    </div>
+
+
+                    <div class="table-wrapper">
+
+                        <table>
+
+                            <thead>
+
+                                <tr>
+
+                                    <th>Booking ID</th>
+                                    <th>Spot</th>
+                                    <th>Customer</th>
+                                    <th>Date</th>
+                                    <th>Amount</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody id="bookingsTableBody">
+                            </tbody>
+
+                        </table>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- CUSTOMERS -->
+            <div id="adminCustomers"
+                 class="admin-content hidden">
+
+                <div class="glass-card admin-card">
+
+                    <div class="table-header">
+
+                        <h3>
+                            <i class="fa-solid fa-users"></i>
+                            Registered Customers
+                            (<span id="customerCount">0</span>)
+                        </h3>
+
+                        <input
+                            id="customerSearch"
+                            class="search-input"
+                            type="text"
+                            placeholder="Search customers..."
+                            oninput="renderCustomers()"
+                        >
+
+                    </div>
+
+
+                    <div class="table-wrapper">
+
+                        <table>
+
+                            <thead>
+
+                                <tr>
+
+                                    <th>Customer Name</th>
+                                    <th>Email</th>
+                                    <th>Phone</th>
+                                    <th>Joined Date</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody id="customersTableBody">
+                            </tbody>
+
+                        </table>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+</div>
+
+
+<script src="script.js"></script>
+
+</body>
+</html>
